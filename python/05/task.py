@@ -18,7 +18,6 @@ def bp_to_id(bp):
 
 def task1():
     boardingpasses_combined = open('input.txt').read().splitlines()
-
     ids = map(bp_to_id, boardingpasses_combined)
     max_id = max(ids)
     return max_id
