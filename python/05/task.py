@@ -14,14 +14,14 @@ def bp_to_id(bp):
 
 
 def task1():
-    boardingpasses_combined = open('input.txt').read().splitlines()
+    boardingpasses_combined = open('input.txt')
     ids = map(bp_to_id, boardingpasses_combined)
     max_id = max(ids)
     return max_id
 
 
 def task2():
-    boardingpasses_combined = open('input.txt').read().splitlines()
+    boardingpasses_combined = open('input.txt')
     ids = sorted(list(map(bp_to_id, boardingpasses_combined)))
     for i in range(0, len(ids)-1):
         x = ids[i]
