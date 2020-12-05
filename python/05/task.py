@@ -2,17 +2,14 @@ TRUE_MAP = ['B', 'R']
 ROW_COLUMN_INDEX = 7
 
 
-def bsp(bp):
-    binarymapping = (
-        bp.replace('B', "1").replace('R', "1")
-          .replace('F', "0").replace('L', "0")
-    )
+def bsp(bp, one='B', zero='F'):
+    binarymapping = bp.replace(one, "1").replace(zero, "0")
     return int(binarymapping, 2)
 
 
 def bp_to_id(bp):
     row = bsp(bp[:ROW_COLUMN_INDEX])
-    column = bsp(bp[ROW_COLUMN_INDEX:])
+    column = bsp(bp[ROW_COLUMN_INDEX:], 'R', 'L')
     return row * 8 + column
 
 
