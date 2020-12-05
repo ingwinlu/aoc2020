@@ -1,4 +1,3 @@
-TRUE_MAP = ['B', 'R']
 ROW_COLUMN_INDEX = 7
 
 
