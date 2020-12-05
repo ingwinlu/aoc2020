@@ -5,7 +5,7 @@ ROW_COLUMN_INDEX = 7
 def bsp(bp):
     binarymapping = ''.join([
         "1" if char in TRUE_MAP else "0"
-        for char in list(bp)
+        for char in bp
     ])
     return int(binarymapping, 2)
 
