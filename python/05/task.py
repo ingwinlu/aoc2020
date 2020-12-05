@@ -3,10 +3,10 @@ ROW_COLUMN_INDEX = 7
 
 
 def bsp(bp):
-    binarymapping = ''.join([
-        "1" if char in TRUE_MAP else "0"
-        for char in bp
-    ])
+    binarymapping = (
+        bp.replace('B', "1").replace('R', "1")
+          .replace('F', "0").replace('L', "0")
+    )
     return int(binarymapping, 2)
 
 
