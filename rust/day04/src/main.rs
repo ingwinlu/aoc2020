@@ -12,16 +12,6 @@ struct PassportsParser;
 
 #[derive(Debug)]
 struct Passport {
-/*
-byr (Birth Year)
-iyr (Issue Year)
-eyr (Expiration Year)
-hgt (Height)
-hcl (Hair Color)
-ecl (Eye Color)
-pid (Passport ID)
-cid (Country ID)
-*/
     byr: String,
     iyr: String,
     eyr: String,
@@ -73,14 +63,38 @@ impl Passport {
             cid: map.get("cid").map(|cid|cid.to_string())
         })
     }
+
+
+    fn validate(&self) -> bool {
+        fn validate_hgt(hgt: &str) -> bool {
+            let l = hgt.len();
+            match &hgt[l-2..] {
+                "cm" => {
+                    hgt[..(l-2)].parse::<u32>().map_or(false, |i| i>=150 && i<=193)
+                }
+                "in" => {
+                    hgt[..(l-2)].parse::<u32>().map_or(false, |i| i>=59 && i<=76)
+                }
+                _ => false
+            }
+
+        }
+        self.byr.parse::<u32>().map(|byr| byr >= 1920 && byr <= 2002).unwrap_or(false)
+        && self.iyr.parse::<u32>().map(|iyr| iyr >= 2010 && iyr <= 2020).unwrap_or(false)
+        && self.eyr.parse::<u32>().map(|eyr| eyr >= 2020 && eyr <= 2030).unwrap_or(false)
+        && validate_hgt(&self.hgt)
+        && self.hcl.starts_with('#') && self.hcl.len() == 7 && self.hcl[1..].chars().all(|c| {"0123456789abcdef".contains(c)})
+        && [String::from("amb"), String::from("blu"), String::from("brn"), String::from("gry"), String::from("grn"), String::from("hzl"), String::from("oth")].contains(&self.ecl)
+        && self.pid.len() == 9 && self.pid.chars().all(|c| c.is_numeric())
+    }
 }
 
 
-fn task1() -> u32 {
+fn parse_passports() -> Vec<Passport> {
     let unparsed_file = fs::read_to_string("./input.txt").expect("cannot read file");
     let passports = PassportsParser::parse(Rule::passports, &unparsed_file).unwrap().next().unwrap();
 
-    let mut valid = 0u32;
+    let mut passport_vec = Vec::new();
 
     for passport in passports.into_inner() {
         if let Rule::passport = passport.as_rule() {
@@ -93,17 +107,24 @@ fn task1() -> u32 {
                     hashmap.insert(key, value);
                 }
             }
-            if Passport::from_hashmap(hashmap).is_some() {
-                valid += 1;
-
+            if let Some(pp) = Passport::from_hashmap(hashmap) {
+                passport_vec.push(pp);
             }
         }
     }
-    valid
+    passport_vec
 }
 
-fn task2() -> u32 {
-    0
+
+fn task1() -> usize {
+    let passports = parse_passports();
+    passports.len()
+}
+
+fn task2() -> usize {
+    let passports = parse_passports();
+    let valid: Vec<Passport> = passports.into_iter().filter(|pp| pp.validate()).collect();
+    valid.len()
 }
 
 fn main() {
@@ -120,9 +141,11 @@ mod tests {
     #[test]
     fn test_bench_1() {
         println!("task1: {}", bench(|| task1()));
+        panic!();
     }
     #[test]
     fn test_bench_2() {
         println!("task2: {}", bench(|| task2()));
+        panic!();
     }
 }
