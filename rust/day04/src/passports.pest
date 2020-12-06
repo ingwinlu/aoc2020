@@ -1,0 +1,10 @@
+key = { ASCII_ALPHA_LOWER+ }
+value = { ( "#" | ASCII_HEX_DIGIT | ASCII_ALPHA_LOWER)+ }
+
+pair = { key ~ ":" ~ value }
+pair_delim = _{ " " | "\n" }
+
+passport = { pair ~ (pair_delim ~ pair)+ }
+passport_delim = _{ "\n"{2, } }
+
+passports = { passport ~ (passport_delim ~ passport)* }
