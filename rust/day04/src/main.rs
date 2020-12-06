@@ -19,40 +19,48 @@ struct Passport {
     hcl: String,
     ecl: String,
     pid: String,
-    cid: Option<String>
+    cid: Option<String>,
 }
 
 impl Passport {
     fn from_hashmap(map: HashMap<&str, &str>) -> Option<Passport> {
         let byr = match map.get("byr") {
-            Some(val) => {val}
-            None => {return None}
-        }.to_string();
+            Some(val) => val,
+            None => return None,
+        }
+        .to_string();
         let iyr = match map.get("iyr") {
-            Some(val) => {val}
-            None => {return None}
-        }.to_string();
+            Some(val) => val,
+            None => return None,
+        }
+        .to_string();
         let eyr = match map.get("eyr") {
-            Some(val) => {val}
-            None => {return None}
-        }.to_string();
+            Some(val) => val,
+            None => return None,
+        }
+        .to_string();
         let hgt = match map.get("hgt") {
-            Some(val) => {val}
-            None => {return None}
-        }.to_string();
+            Some(val) => val,
+            None => return None,
+        }
+        .to_string();
         let hcl = match map.get("hcl") {
-            Some(val) => {val}
-            None => {return None}
-        }.to_string();
+            Some(val) => val,
+            None => return None,
+        }
+        .to_string();
         let ecl = match map.get("ecl") {
-            Some(val) => {val}
-            None => {return None}
-        }.to_string();
+            Some(val) => val,
+            None => return None,
+        }
+        .to_string();
         let pid = match map.get("pid") {
-            Some(val) => {val}
-            None => {return None}
-        }.to_string();
-        Some(Passport{
+            Some(val) => val,
+            None => return None,
+        }
+        .to_string();
+        let cid = map.get("cid").map(|cid| cid.to_string());
+        Some(Passport {
             byr,
             iyr,
             eyr,
@@ -60,39 +68,64 @@ impl Passport {
             hcl,
             ecl,
             pid,
-            cid: map.get("cid").map(|cid|cid.to_string())
+            cid,
         })
     }
-
 
     fn validate(&self) -> bool {
         fn validate_hgt(hgt: &str) -> bool {
             let l = hgt.len();
-            match &hgt[l-2..] {
-                "cm" => {
-                    hgt[..(l-2)].parse::<u32>().map_or(false, |i| i>=150 && i<=193)
-                }
-                "in" => {
-                    hgt[..(l-2)].parse::<u32>().map_or(false, |i| i>=59 && i<=76)
-                }
-                _ => false
+            match &hgt[l - 2..] {
+                "cm" => hgt[..(l - 2)]
+                    .parse::<u32>()
+                    .map_or(false, |i| i >= 150 && i <= 193),
+                "in" => hgt[..(l - 2)]
+                    .parse::<u32>()
+                    .map_or(false, |i| i >= 59 && i <= 76),
+                _ => false,
             }
-
         }
-        self.byr.parse::<u32>().map(|byr| byr >= 1920 && byr <= 2002).unwrap_or(false)
-        && self.iyr.parse::<u32>().map(|iyr| iyr >= 2010 && iyr <= 2020).unwrap_or(false)
-        && self.eyr.parse::<u32>().map(|eyr| eyr >= 2020 && eyr <= 2030).unwrap_or(false)
-        && validate_hgt(&self.hgt)
-        && self.hcl.starts_with('#') && self.hcl.len() == 7 && self.hcl[1..].chars().all(|c| {"0123456789abcdef".contains(c)})
-        && [String::from("amb"), String::from("blu"), String::from("brn"), String::from("gry"), String::from("grn"), String::from("hzl"), String::from("oth")].contains(&self.ecl)
-        && self.pid.len() == 9 && self.pid.chars().all(|c| c.is_numeric())
+        self.byr
+            .parse::<u32>()
+            .map(|byr| byr >= 1920 && byr <= 2002)
+            .unwrap_or(false)
+            && self
+                .iyr
+                .parse::<u32>()
+                .map(|iyr| iyr >= 2010 && iyr <= 2020)
+                .unwrap_or(false)
+            && self
+                .eyr
+                .parse::<u32>()
+                .map(|eyr| eyr >= 2020 && eyr <= 2030)
+                .unwrap_or(false)
+            && validate_hgt(&self.hgt)
+            && self.hcl.starts_with('#')
+            && self.hcl.len() == 7
+            && self.hcl[1..]
+                .chars()
+                .all(|c| "0123456789abcdef".contains(c))
+            && [
+                String::from("amb"),
+                String::from("blu"),
+                String::from("brn"),
+                String::from("gry"),
+                String::from("grn"),
+                String::from("hzl"),
+                String::from("oth"),
+            ]
+            .contains(&self.ecl)
+            && self.pid.len() == 9
+            && self.pid.chars().all(|c| c.is_numeric())
     }
 }
 
-
 fn parse_passports() -> Vec<Passport> {
     let unparsed_file = fs::read_to_string("./input.txt").expect("cannot read file");
-    let passports = PassportsParser::parse(Rule::passports, &unparsed_file).unwrap().next().unwrap();
+    let passports = PassportsParser::parse(Rule::passports, &unparsed_file)
+        .unwrap()
+        .next()
+        .unwrap();
 
     let mut passport_vec = Vec::new();
 
@@ -114,7 +147,6 @@ fn parse_passports() -> Vec<Passport> {
     }
     passport_vec
 }
-
 
 fn task1() -> usize {
     let passports = parse_passports();
