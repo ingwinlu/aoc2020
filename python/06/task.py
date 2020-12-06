@@ -2,10 +2,7 @@ def task1():
     groups = open('input.txt').read().split('\n\n')
     acc = 0
     for group in groups:
-        shared = set()
-        for person in group.splitlines():
-            s = set(person)
-            shared = shared | s
+        shared = set(group) - {'\n'}
         acc += len(shared)
     return acc
 
