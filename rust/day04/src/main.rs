@@ -85,6 +85,18 @@ impl Passport {
                 _ => false,
             }
         }
+        fn validate_ecl(ecl: &String) -> bool {
+            match &ecl[..] {
+                "amb" => true,
+                "blu" => true,
+                "brn" => true,
+                "gry" => true,
+                "grn" => true,
+                "hzl" => true,
+                "oth" => true,
+                _ => false
+            }
+        }
         self.byr
             .parse::<u32>()
             .map(|byr| byr >= 1920 && byr <= 2002)
@@ -105,16 +117,7 @@ impl Passport {
             && self.hcl[1..]
                 .chars()
                 .all(|c| "0123456789abcdef".contains(c))
-            && [
-                String::from("amb"),
-                String::from("blu"),
-                String::from("brn"),
-                String::from("gry"),
-                String::from("grn"),
-                String::from("hzl"),
-                String::from("oth"),
-            ]
-            .contains(&self.ecl)
+            && validate_ecl(&self.ecl)
             && self.pid.len() == 9
             && self.pid.chars().all(|c| c.is_numeric())
     }
