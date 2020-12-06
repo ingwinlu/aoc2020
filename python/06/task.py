@@ -19,7 +19,6 @@ def task2():
         )
         acc += len(joined)
     return acc
-    pass
 
 
 def main():
