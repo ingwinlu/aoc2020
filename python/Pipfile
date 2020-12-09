@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 networkx = "*"
+matplotlib = "*"
+scipy = "*"
 
 [dev-packages]
 mypy = "*"
