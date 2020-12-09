@@ -44,6 +44,11 @@ def task2():
             start += 1
             end = start + 1
         end += 1
+        if end >= len(numbers):
+            start += 1
+            end = start + 1
+        if start >= len(numbers):
+            raise ValueError
 
 
 def main():
