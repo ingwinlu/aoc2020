@@ -29,7 +29,7 @@ def ways(adapters, i, cache):
     if i in cache:
         return cache[i]
 
-    if i == len(adapters) - 1:
+    if i >= len(adapters) - 1:
         return 1
 
     res = 0
