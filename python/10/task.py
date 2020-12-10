@@ -1,6 +1,3 @@
-import networkx as nx
-
-
 def get_adapters():
     return list(map(
         int,
